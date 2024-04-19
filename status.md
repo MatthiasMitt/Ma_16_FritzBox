@@ -9,10 +9,10 @@ Zustand iPad mit Pythonista: in Arbeit
 Vorbereitung
 ------------
 
-Pad,iPhose:
+Pad,iPhone:
 Installiere "fritzboxconnection" in "site-packages-3".
 
-( Wie ich dass vor einigen Jahren hinbekommen habe, habe ich vergessen. )
+( Wie ich das vor einigen Jahren hinbekommen habe, habe ich vergessen. )
 
 iMac:
 Update python3 von 3.8.2 auf 3.12.3 .
@@ -27,10 +27,10 @@ Programme
 *** Ma_16_einfacheAnfragen ***
 
 iPAD,IPhone:
-Einfache Anfragen funktionieren auch mit dem damals installierten fritzboxconnection. Vorher muss aber aus "boxen_Muster.py" eine Datei "boxen.py" mit echten Daten hergestellt werden.
+Einfache Anfragen funktionieren auch mit dem damals installierten fritzboxconnection.
 
 iMac:
-Funktioniert auch, nur  FritzHosts  fehlt
+Funktioniert auch, nur  FritzHosts  fehlt (Kann nicht importiert werden,)
 
 *** Ma_16_Plattform.py ***
 
@@ -43,5 +43,6 @@ Versuche möglichst viel aus den Fritzboxen herauszulesen.
 
 iPad,iPhone,iMac:
 Lebenstüchtig, aber nicht alle Funktionen liefern tatsächlich.
-
+Details in 
+Ma_16_ZeigeAlles.Testergebnis.txt
 
