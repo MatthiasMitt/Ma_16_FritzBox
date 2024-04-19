@@ -1,0 +1,52 @@
+Auf beiden Plattformen gut:
+
+List of all   services
+
+action    WANIPConn1/GetStatusInfo
+action    WANCommonInterfaceConfig1/GetTotalBytesSent:
+action    WANCommonInterfaceConfig1/GetTotalBytesReceived:
+action    WANIPConnection1/GetExternalIPAddress:
+action    WANCommonInterfaceConfig1/GetCommonLinkProperties: 
+
+
+attribute ssid : Mittelroth74
+attribute channel : 11
+method    channel_infos() 
+
+
+Status
+------
+attribute str_transmission_rate : 
+attribute str_max_linked_bit_rate : 
+attribute str_max_bit_rate : 
+method    get_monitor_data() 
+
+
+HomeAutomation
+--------------	
+method    device_informations()
+Auf beiden Plattformen schlecht:
+
+attribute actionnames : ...failed.
+
+method    get_action_arguments() : ...failed.
+
+call_action('X_VoIP1','X_AVM-DE_DialNumber')  will nicht !
+    <class 'M_fritzconnection.core.exceptions.FritzActionFailedError'> UPnPError:
+    errorCode: 501
+
+action    X_VoIP1/X_AVM-DE_DialHangup:
+   {}	
+
+
+Auf beiden Plattformen verschieden:
+
+WLAN hosts :
+table is empty on iMac, has one row on iPad
+
+FritzHosts (and its ouput) missing on iPad
+
+get_device_information_by_index(0)   and...(1)  faild on iMac.
+    But device_informations() good on both platfroms
+
+
