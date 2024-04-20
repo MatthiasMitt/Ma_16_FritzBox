@@ -1,32 +1,48 @@
 modulname = 'Ma_16_ZeigeAlles'
 _c_ = '(c) 2024, Matthias Mittelstein, Germany, 23816 Neversdorf, Hauptstraße 23'
 
-from   Ma_16_Plattform                              import Ma_Plattform
-Ma16ZAPlattfrom = Ma_Plattform()
+
+import sys
+import os
+b2 = os.path.realpath(__file__).split("/")
+b4 = "/".join(b2[0:-2]) 
+b5 = "/".join(b2[0:-1])
+# 'import' soll auch in dem Ordner suchen, in dem dises Programm gespeichet ist.
+sys.path.insert(1,b5)
+# 'import' soll auch in dem umfassenden Ordner suchen, wo es hoffentlich das
+# Hilfspaket 'Ma_Util' gibt. Unabhänge davon, wie und von wo aus gestartet wurde.
+sys.path.insert(1,b4)
+
+from   Ma_Util.Ma_Plattform                         import Ma_Plattform
+Ma16ZAPlattform = Ma_Plattform()
 
 from   time                                         import sleep
 
-if Ma16ZAPlattfrom.auf_iPhone_o_iPad():
+if Ma16ZAPlattform.auf_iPhone_o_iPad():
+	# mit Korrekturen
 	from M_fritzconnection.core.fritzconnection import FritzConnection
 else:
 	from   fritzconnection.core.fritzconnection import FritzConnection
 
 from   fritzconnection.lib.fritzwlan                import FritzWLAN
 
-if Ma16ZAPlattfrom.auf_iPhone_o_iPad():
+if Ma16ZAPlattform.auf_iPhone_o_iPad():
+	# mit Korrekturen
 	from M_fritzconnection.core.exceptions      import FritzServiceError, FritzConnectionException
 else:
 	from   fritzconnection.core.exceptions      import FritzServiceError, FritzConnectionException
 
-if Ma16ZAPlattfrom.auf_iPhone_o_iPad():
+if Ma16ZAPlattform.auf_iPhone_o_iPad():
 	from   fritzconnection.fritzhosts           import FritzHosts
+#else:
+#	# fehlt der Modul
 
 from   fritzconnection.lib.fritzstatus              import FritzStatus
 from   fritzconnection.lib.fritzhomeauto            import FritzHomeAutomation
 
 from   boxen                                        import boxen
 
-if Ma16ZAPlattfrom.auf_iPhone_o_iPad():
+if Ma16ZAPlattform.auf_iPhone_o_iPad():
 	import console
 
 class FritzTest():
@@ -37,27 +53,27 @@ class FritzTest():
 	
 	
 	def title1(self,aStr):
-		if Ma16ZAPlattfrom.auf_iPhone_o_iPad():
+		if Ma16ZAPlattform.auf_iPhone_o_iPad():
 			console.set_color(0.0,0.0,1.0) #blue
 			console.set_font("Menlo-Regular", 18)
 		l = len(aStr)
 		print('\n',aStr,'\n','='*l,'\n',sep='')
-		if Ma16ZAPlattfrom.auf_iPhone_o_iPad():
+		if Ma16ZAPlattform.auf_iPhone_o_iPad():
 			console.set_font()  # back to 14
 			console.set_color() # back to black
 	
 	def title2(self,aStr):
-		if Ma16ZAPlattfrom.auf_iPhone_o_iPad():
+		if Ma16ZAPlattform.auf_iPhone_o_iPad():
 			console.set_color(0.0,0.0,1.0) #blue
 			console.set_font("Menlo-Regular", 16)
 		l = len(aStr)
 		print('\n',aStr,'\n','-'*l,sep='')
-		if Ma16ZAPlattfrom.auf_iPhone_o_iPad():
+		if Ma16ZAPlattform.auf_iPhone_o_iPad():
 			console.set_font()
 			console.set_color()
 
 	def print_red(self,aStr):
-		if Ma16ZAPlattfrom.auf_iPhone_o_iPad():
+		if Ma16ZAPlattform.auf_iPhone_o_iPad():
 			console.set_color(1.0,0.0,0.0) #red
 			print(aStr)
 			console.set_color()
@@ -266,7 +282,7 @@ class FritzTest():
 				None
 			
 			
-			if Ma16ZAPlattfrom.auf_iPhone_o_iPad():
+			if Ma16ZAPlattform.auf_iPhone_o_iPad():
 				fho = FritzHosts(self.fc)
 				try:
 					hosts = fho.get_hosts_info()
