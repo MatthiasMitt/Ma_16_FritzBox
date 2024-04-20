@@ -13,6 +13,7 @@ sys.path.insert(1,b5)
 # Hilfspaket 'Ma_Util' gibt. Unabhänge davon, wie und von wo aus gestartet wurde.
 sys.path.insert(1,b4)
 
+from   Ma_Util.Ma_Console                           import Ma_Console
 from   Ma_Util.Ma_Plattform                         import Ma_Plattform
 Ma16ZAPlattform = Ma_Plattform()
 
@@ -50,40 +51,8 @@ class FritzTest():
 	def __init__(self,box):
 		
 		self.beschreibung,self.ip,self.modelnamePattern,self.u,self.pw = box
+		self.out = Ma_Console()
 	
-	
-	def title1(self,aStr):
-		if Ma16ZAPlattform.auf_iPhone_o_iPad():
-			console.set_color(0.0,0.0,1.0) #blue
-			console.set_font("Menlo-Regular", 18)
-		l = len(aStr)
-		print('\n',aStr,'\n','='*l,'\n',sep='')
-		if Ma16ZAPlattform.auf_iPhone_o_iPad():
-			console.set_font()  # back to 14
-			console.set_color() # back to black
-	
-	def title2(self,aStr):
-		if Ma16ZAPlattform.auf_iPhone_o_iPad():
-			console.set_color(0.0,0.0,1.0) #blue
-			console.set_font("Menlo-Regular", 16)
-		l = len(aStr)
-		print('\n',aStr,'\n','-'*l,sep='')
-		if Ma16ZAPlattform.auf_iPhone_o_iPad():
-			console.set_font()
-			console.set_color()
-
-	def print_red(self,aStr):
-		if Ma16ZAPlattform.auf_iPhone_o_iPad():
-			console.set_color(1.0,0.0,0.0) #red
-			print(aStr)
-			console.set_color()
-		else:
-			print('***')
-			print('**** ',aStr)
-			print('***')
-
-	
-		
 	def do_call_action(self,a_service,a_action,a_arguments=None):
 		print('action    ',a_service,'/',a_action,sep='',end='')
 		if a_arguments:
@@ -95,15 +64,14 @@ class FritzTest():
 			str1 = "\n!! call_action('"+str(a_service)+"','"+str(a_action)+"')  will nicht !"
 			str2 = '!!'+str(e.__class__)+'\n'
 			str3 = '!! '+str(e)+'\n'
-			self.print_red(str1)
-			self.print_red(str2)
-			self.print_red(str3)
+			self.out.print_red(str1)
+			self.out.print_red(str2)
+			self.out.print_red(str3)
 			return False
 		except:
-			self.print_red('!!! anderer Fehler')
+			self.out.print_red('!!! anderer Fehler')
 			return False
 		return True
-	
 	
 	def do_call_and_print(self,a_handle,aMethod,a_arguments=None):
 		print('method    ',aMethod,'(',sep='',end='')
@@ -120,7 +88,7 @@ class FritzTest():
 			# learnt from
 			# https://stackoverflow.com/questions/3061/calling-a-function-of-a-module-by-using-its-name-a-string
 		except :
-			self.print_red('...failed.')
+			self.out.print_red('...failed.')
 	
 	
 	def do_get_and_print(self,a_handle,aAttribute):
@@ -131,7 +99,7 @@ class FritzTest():
 			# learnt from
 			# https://stackoverflow.com/questions/3061/calling-a-function-of-a-module-by-using-its-name-a-string
 		except :
-			self.print_red('...failed.')
+			self.out.print_red('...failed.')
 	
 		
 	def sleep_verbose(self,tim):
@@ -198,7 +166,7 @@ class FritzTest():
 	
 	def test(self):
 		
-		self.title1('Teste '+self.beschreibung)
+		self.out.title1('Teste '+self.beschreibung)
 		
 		try:
 			if self.u != '':
@@ -214,7 +182,7 @@ class FritzTest():
 				                       #,use_tls= False
 				                       )
 		except:
-			self.print_red('... diese FritzBox antwortet nicht !')
+			self.out.print_red('... diese FritzBox antwortet nicht !')
 			self.fc = None
 			
 		if self.fc:
@@ -258,7 +226,7 @@ class FritzTest():
 				self.sleep_verbose(7)
 			self.do_call_action('X_VoIP1','X_AVM-DE_DialHangup')
 			
-			self.title2('WLAN')
+			self.out.title2('WLAN')
 			
 			fw = FritzWLAN(self.fc)
 			# bricht ab, wenn das Passwort nicht stimmte:  ssidn = fw.ssid
@@ -295,11 +263,11 @@ class FritzTest():
 #else /* TTT7 */
 					self.print_Fritz_hosts(hosts)
 				except :
-					self.print_red('FritzHosts(...).get_hosts_info  failed.')
+					self.out.print_red('FritzHosts(...).get_hosts_info  failed.')
 			else:
 				print('*** FritzHosts  auf dieser Plattform nicht verfügbar. ***')
 			
-			self.title2('Status')
+			self.out.title2('Status')
 			
 			fs = FritzStatus(self.fc)
 			self.do_get_and_print( fs,'str_transmission_rate')
@@ -309,7 +277,7 @@ class FritzTest():
 			
 			
 			
-			self.title2('HomeAutomation')
+			self.out.title2('HomeAutomation')
 			
 			fh  = FritzHomeAutomation(self.fc)
 			ain ='11657 0217798'
@@ -327,9 +295,9 @@ class FritzTest():
 				
 				#bang print(fw.total_host_number)
 			except FritzServiceError as eFSE:
-				self.print_red('\n!! mehr HomeAutomation scheint von dieser FritzBox nicht angeboten zu sein!')
-				self.print_red('!!'+str(eFSE.__class__))
-				self.print_red('!!'+str(eFSE)+'\n')
+				self.out.print_red('\n!! mehr HomeAutomation scheint von dieser FritzBox nicht angeboten zu sein!')
+				self.out.print_red('!!'+str(eFSE.__class__))
+				self.out.print_red('!!'+str(eFSE)+'\n')
 		
 	def finish(self):
 		pass
