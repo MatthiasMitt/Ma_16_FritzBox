@@ -13,6 +13,7 @@ sys.path.insert(1,b5)
 # Hilfspaket 'Ma_Util' gibt. Unabhänge davon, wie und von wo aus gestartet wurde.
 sys.path.insert(1,b4)
 
+from   Ma_Util.Ma_Print                             import print_dict
 from   Ma_Util.Ma_Console                           import Ma_Console
 from   Ma_Util.Ma_Plattform                         import Ma_Plattform
 Ma16ZAPlattform = Ma_Plattform()
@@ -57,9 +58,14 @@ class FritzTest():
 		print('action    ',a_service,'/',a_action,sep='',end='')
 		if a_arguments:
 			print(' ,arguments=',a_arguments,sep='',end='')
-		print(':','\n  ',end=' ')
+		print(':')
 		try:
-			print(self.fc.call_action(a_service,a_action,arguments=a_arguments))
+			res = self.fc.call_action(a_service,a_action,arguments=a_arguments)
+			#deb print(type(res))
+			if type(res) == dict:
+				print_dict(res,title="   [dict]")
+			else:
+				print('       ',res)
 		except FritzConnectionException as e:
 			str1 = "\n!! call_action('"+str(a_service)+"','"+str(a_action)+"')  will nicht !"
 			str2 = '!!'+str(e.__class__)+'\n'
@@ -77,14 +83,18 @@ class FritzTest():
 		print('method    ',aMethod,'(',sep='',end='')
 		if a_arguments != None:
 			print(a_arguments,sep='',end='')
-		print(') : ',end='')
+		print(') : ')
 		try:
 			if a_arguments != None:
 				r = getattr(a_handle,a_func)(a_arguments)
 				r = getattr(a_handle,aMethod)(a_arguments)
 			else:
 				r = getattr(a_handle,aMethod)()
-			print(r)
+			#old print(r)
+			if type(r) == dict:
+				print_dict(r,title="   [dict]")
+			else:
+				print(r)
 			# learnt from
 			# https://stackoverflow.com/questions/3061/calling-a-function-of-a-module-by-using-its-name-a-string
 		except :
