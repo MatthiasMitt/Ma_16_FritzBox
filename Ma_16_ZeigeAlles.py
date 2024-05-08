@@ -13,7 +13,7 @@ sys.path.insert(1,b5)
 # Hilfspaket 'Ma_Util' gibt. Unabhänge davon, wie und von wo aus gestartet wurde.
 sys.path.insert(1,b4)
 
-from   Ma_Util.Ma_Print                             import print_dict
+from   Ma_Util.Ma_Print                             import print_dict, print_list, print_list_of_dicts
 from   Ma_Util.Ma_Console                           import Ma_Console
 from   Ma_Util.Ma_Plattform                         import Ma_Plattform
 Ma16ZAPlattform = Ma_Plattform()
@@ -53,19 +53,28 @@ class FritzTest():
 		
 		self.beschreibung,self.ip,self.modelnamePattern,self.u,self.pw = box
 		self.out = Ma_Console()
-	
+
+	def print_result(self,r):
+		if type(r) == dict:
+			# print_dict(r,title="   [dict]",keyWidth=40)
+			print_dict(r,title=" ",keyWidth=40)
+		elif type(r) == list:
+			if type(r[0]) == dict:
+				print_list_of_dicts(r)
+			else:
+				print_list(r)
+		else:
+			#deb print("   type=",type(r))
+			print(r)
+
 	def do_call_action(self,a_service,a_action,a_arguments=None):
-		print('action    ',a_service,'/',a_action,sep='',end='')
+		print('\naction    ',a_service,'/',a_action,sep='',end='')
 		if a_arguments:
 			print(' ,arguments=',a_arguments,sep='',end='')
 		print(':')
 		try:
 			res = self.fc.call_action(a_service,a_action,arguments=a_arguments)
-			#deb print(type(res))
-			if type(res) == dict:
-				print_dict(res,title="   [dict]")
-			else:
-				print('       ',res)
+			self.print_result(res)
 		except FritzConnectionException as e:
 			str1 = "\n!! call_action('"+str(a_service)+"','"+str(a_action)+"')  will nicht !"
 			str2 = '!!'+str(e.__class__)+'\n'
@@ -78,9 +87,11 @@ class FritzTest():
 			self.out.print_red('!!! anderer Fehler')
 			return False
 		return True
-	
+
+
+
 	def do_call_and_print(self,a_handle,aMethod,a_arguments=None):
-		print('method    ',aMethod,'(',sep='',end='')
+		print('\nmethod    ',aMethod,'(',sep='',end='')
 		if a_arguments != None:
 			print(a_arguments,sep='',end='')
 		print(') : ')
@@ -90,11 +101,7 @@ class FritzTest():
 				r = getattr(a_handle,aMethod)(a_arguments)
 			else:
 				r = getattr(a_handle,aMethod)()
-			#old print(r)
-			if type(r) == dict:
-				print_dict(r,title="   [dict]")
-			else:
-				print(r)
+			self.print_result(r)
 			# learnt from
 			# https://stackoverflow.com/questions/3061/calling-a-function-of-a-module-by-using-its-name-a-string
 		except :
@@ -102,7 +109,7 @@ class FritzTest():
 	
 	
 	def do_get_and_print(self,a_handle,aAttribute):
-		print('attribute ',aAttribute,' : ',sep='',end='')
+		print('\nattribute ',aAttribute,' : ',sep='',end='')
 		try:
 			r = getattr(a_handle,aAttribute)
 			print(r)
@@ -197,7 +204,7 @@ class FritzTest():
 			
 		if self.fc:
 		
-			print( 'modelname       :' , self.fc.modelname)
+			print( '\nmodelname       :' , self.fc.modelname)
 			
 			if self.modelnamePattern == '':
 				pass # there is no pattern
@@ -212,12 +219,13 @@ class FritzTest():
 			
 		if self.fc:
 				
-			print( 'system_version  :' , self.fc.system_version)
+			print( '\nsystem_version  :' , self.fc.system_version)
 			
-			print( 'services        :' )
+			print( '\nservices        :' )
 			fss = self.fc.services
-			for fs in fss:
-				print( '}-', fs )
+			print_list(fss,title="- ")
+			#for fs in fss:
+			#	print( '}-', fs )
 			print('---services\n')
 			
 			#print(fc.actionnames)
@@ -249,13 +257,13 @@ class FritzTest():
 				hosts = fw.get_hosts_info()
 				self.print_WLAN_hosts(hosts)
 			except :
-				console.set_color(1.0,0.0,0.0)
-				print('FritzWLAN(...).get_hosts_info  failed.')
-				console.set_color()
+				self.out.print_red('FritzWLAN(...).get_hosts_info  failed.')
 			
 			try:
-				print('\nget_generic_host_entry(0):' , fw.get_generic_host_entry(0))
-				print('\nget_generic_host_entry(1):' , fw.get_generic_host_entry(1))
+				for ix in range(16):
+					res = fw.get_generic_host_entry(ix)
+					print('\nget_generic_host_entry(',ix,'):')
+					self.print_result(res)
 			except:
 				None
 			
@@ -264,18 +272,11 @@ class FritzTest():
 				fho = FritzHosts(self.fc)
 				try:
 					hosts = fho.get_hosts_info()
-#ifndef TTT7
-					print('\nhosts :')
-					for host in hosts:
-						print( '}-' , host ) # , '\n' )
-					print('---hosts---    wahrscheinlich mehr, aber Box zeigt nur 16  :-( \n')
-			
-#else /* TTT7 */
 					self.print_Fritz_hosts(hosts)
 				except :
 					self.out.print_red('FritzHosts(...).get_hosts_info  failed.')
 			else:
-				print('*** FritzHosts  auf dieser Plattform nicht verfügbar. ***')
+				print('\n*** FritzHosts  auf dieser Plattform nicht verfügbar. ***')
 			
 			self.out.title2('Status')
 			
